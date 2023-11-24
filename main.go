@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gofiber/fiber" // import the fiber package
+	"github.com/gofiber/fiber/v2" // import the fiber package
 
 	"log"
 
@@ -9,9 +9,11 @@ import (
 
 	"github.com/firebase007/go-rest-api-with-fiber/router"
 
-	"github.com/gofiber/fiber/middleware"
-
 	_ "github.com/lib/pq"
+
+	_ "go-rest-api-with-fiber/docs"
+
+	"github.com/gofiber/swagger"
 )
 
 func main() { // entry point to our program
@@ -23,10 +25,16 @@ func main() { // entry point to our program
 
 	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
 
-	app.Use(middleware.Logger())
+	// app.Use(middleware.Logger()) // use the Logger middleware
 
 	router.SetupRoutes(app)
+	// setup swagger
+	app.Get("/swagger/*", swagger.HandlerDefault)     // default
+	app.Get("/swagger/*", swagger.New(swagger.Config{ // custom
+		URL:         "http://http://localhost:3000/doc.json",
+		DeepLinking: false,
+	}))
 
-	app.Listen(3000) // listen/Serve the new Fiber app on port 3000
+	app.Listen(":3000") // listen/Serve the new Fiber app on port 3000
 
 }

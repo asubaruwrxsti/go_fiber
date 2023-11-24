@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/firebase007/go-rest-api-with-fiber/config"
 	"github.com/go-sql-driver/mysql"
@@ -15,9 +14,6 @@ var DB *sql.DB
 // Connect function
 func Connect() error {
 	var err error
-
-	p := config.Config("DB_PORT")
-	fmt.Printf("DB_PORT: %s\n", p)
 
 	cfg := mysql.Config{
 		User:   config.Config("DB_USER"),

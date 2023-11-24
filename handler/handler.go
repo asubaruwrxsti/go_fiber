@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/firebase007/go-rest-api-with-fiber/model"
 
@@ -12,7 +12,7 @@ import (
 )
 
 // GetAllProducts from db
-func GetAllProducts(c *fiber.Ctx) {
+func GetAllProducts(c *fiber.Ctx) error {
 
 	// query product table in the database
 	rows, err := database.DB.Query("SELECT name, description, category, amount FROM products order by name")
@@ -21,7 +21,7 @@ func GetAllProducts(c *fiber.Ctx) {
 			"success": false,
 			"error":   err,
 		})
-		return
+		return err
 	}
 
 	defer rows.Close()
@@ -37,7 +37,7 @@ func GetAllProducts(c *fiber.Ctx) {
 				"success": false,
 				"error":   err,
 			})
-			return
+			return err
 		}
 
 		// Append Product to Products
@@ -54,12 +54,13 @@ func GetAllProducts(c *fiber.Ctx) {
 			"success": false,
 			"message": err,
 		})
-		return
+		return err
 	}
+	return nil
 }
 
 // GetSingleProduct from db
-func GetSingleProduct(c *fiber.Ctx) {
+func GetSingleProduct(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 	product := model.Product{}
@@ -71,7 +72,7 @@ func GetSingleProduct(c *fiber.Ctx) {
 			"success": false,
 			"message": err,
 		})
-		return
+		return err
 	}
 
 	defer row.Close()
@@ -107,13 +108,13 @@ func GetSingleProduct(c *fiber.Ctx) {
 			"success": false,
 			"message": err,
 		})
-		return
+		return err
 	}
-
+	return nil
 }
 
 // CreateProduct handler
-func CreateProduct(c *fiber.Ctx) {
+func CreateProduct(c *fiber.Ctx) error {
 
 	// Instantiate new Product struct
 	p := new(model.Product)
@@ -125,7 +126,7 @@ func CreateProduct(c *fiber.Ctx) {
 			"success": false,
 			"message": err,
 		})
-		return
+		return err
 	}
 
 	// Insert Product into database
@@ -135,7 +136,7 @@ func CreateProduct(c *fiber.Ctx) {
 			"success": false,
 			"message": err,
 		})
-		return
+		return err
 	}
 	// Print result
 	log.Println(res)
@@ -150,12 +151,13 @@ func CreateProduct(c *fiber.Ctx) {
 			"success": false,
 			"message": "Error creating product",
 		})
-		return
+		return err
 	}
+	return nil
 }
 
 // DeleteProduct from db
-func DeleteProduct(c *fiber.Ctx) {
+func DeleteProduct(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
@@ -166,7 +168,7 @@ func DeleteProduct(c *fiber.Ctx) {
 			"success": false,
 			"error":   err,
 		})
-		return
+		return err
 	}
 
 	// Print result
@@ -181,6 +183,7 @@ func DeleteProduct(c *fiber.Ctx) {
 			"success": false,
 			"error":   err,
 		})
-		return
+		return err
 	}
+	return nil
 }

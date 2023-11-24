@@ -1,15 +1,13 @@
 package middleware
 
 import (
-	"github.com/gofiber/fiber"
-
-	"github.com/gofiber/basicauth"
-
 	"github.com/firebase007/go-rest-api-with-fiber/config"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/basicauth"
 )
 
 // AuthReq middleware
-func AuthReq() func(*fiber.Ctx) {
+func AuthReq() func(*fiber.Ctx) error {
 
 	cfg := basicauth.Config{
 		Users: map[string]string{
@@ -17,8 +15,5 @@ func AuthReq() func(*fiber.Ctx) {
 		},
 	}
 
-	err := basicauth.New(cfg)
-
-	return err
-
+	return basicauth.New(cfg)
 }
