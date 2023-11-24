@@ -5,7 +5,122 @@ info:
   description: Go Fiber REST API with Swagger Example
   title: Go Fiber REST API with Swagger Example
   version: "1"
-paths: {}
+paths:
+  /api:
+    get:
+      consumes:
+      - '*/*'
+      description: Get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - '*/*'
+      description: Create a product
+      parameters:
+      - description: Product Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Product Description
+        in: body
+        name: description
+        required: true
+        schema:
+          type: string
+      - description: Product Category
+        in: body
+        name: category
+        required: true
+        schema:
+          type: string
+      - description: Product Amount
+        in: body
+        name: amount
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a product
+      tags:
+      - products
+  /api/{id}:
+    delete:
+      consumes:
+      - '*/*'
+      description: Delete a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      consumes:
+      - '*/*'
+      description: Get a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get a product
+      tags:
+      - products
+  /api/health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - health
 schemes:
 - http
 swagger: "2.0"

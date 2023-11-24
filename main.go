@@ -6,8 +6,7 @@ import (
 	"log"
 
 	"github.com/firebase007/go-rest-api-with-fiber/database"
-	"github.com/firebase007/go-rest-api-with-fiber/handler"
-	"github.com/firebase007/go-rest-api-with-fiber/middleware"
+	"github.com/firebase007/go-rest-api-with-fiber/router"
 
 	_ "github.com/lib/pq"
 
@@ -27,16 +26,11 @@ func main() {
 	if err := database.Connect(); err != nil {
 		log.Fatal(err)
 	}
-	// app.Use(middleware.Logger())
-	// router.SetupRoutes(app)
 
 	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
-	api := app.Group("/api", middleware.AuthReq())
 
-	api.Get("/", handler.GetAllProducts)
-	api.Get("/:id", handler.GetSingleProduct)
-	api.Post("/", handler.CreateProduct)
-	api.Delete("/:id", handler.DeleteProduct)
+	// app.Use(middleware.Logger())
+	router.SetupRoutes(app)
 
 	app.Get("/swagger/*", swagger.HandlerDefault)     // default
 	app.Get("/swagger/*", swagger.New(swagger.Config{ // custom

@@ -11,10 +11,14 @@ import (
 	"github.com/firebase007/go-rest-api-with-fiber/database"
 )
 
-// @ GET /api
-// @host localhost:3000
-// @desc Get all products
-// @version 1
+// GetAllProducts godoc
+// @Summary Get all products
+// @Description Get all products
+// @Tags products
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api [get]
 func GetAllProducts(c *fiber.Ctx) error {
 
 	// query product table in the database
@@ -62,7 +66,15 @@ func GetAllProducts(c *fiber.Ctx) error {
 	return nil
 }
 
-// GetSingleProduct from db
+// GetSingleProduct godoc
+// @Summary Get a product
+// @Description Get a product
+// @Tags products
+// @Accept */*
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} map[string]interface{}
+// @Router /api/{id} [get]
 func GetSingleProduct(c *fiber.Ctx) error {
 
 	id := c.Params("id")
@@ -116,7 +128,18 @@ func GetSingleProduct(c *fiber.Ctx) error {
 	return nil
 }
 
-// CreateProduct handler
+// CreateProduct godoc
+// @Summary Create a product
+// @Description Create a product
+// @Tags products
+// @Accept */*
+// @Produce json
+// @Param name body string true "Product Name"
+// @Param description body string true "Product Description"
+// @Param category body string true "Product Category"
+// @Param amount body int true "Product Amount"
+// @Success 200 {object} map[string]interface{}
+// @Router /api [post]
 func CreateProduct(c *fiber.Ctx) error {
 
 	// Instantiate new Product struct
@@ -159,7 +182,15 @@ func CreateProduct(c *fiber.Ctx) error {
 	return nil
 }
 
-// DeleteProduct from db
+// DeleteProduct godoc
+// @Summary Delete a product
+// @Description Delete a product
+// @Tags products
+// @Accept */*
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} map[string]interface{}
+// @Router /api/{id} [delete]
 func DeleteProduct(c *fiber.Ctx) error {
 
 	id := c.Params("id")
@@ -188,5 +219,25 @@ func DeleteProduct(c *fiber.Ctx) error {
 		})
 		return err
 	}
+	return nil
+}
+
+// HealthCheck godoc
+// @Summary Show the status of server.
+// @Description get the status of server.
+// @Tags health
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/health [get]
+func HealthCheck(c *fiber.Ctx) error {
+	res := map[string]interface{}{
+		"data": "Server is up and running",
+	}
+
+	if err := c.JSON(res); err != nil {
+		return err
+	}
+
 	return nil
 }
