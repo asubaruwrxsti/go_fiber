@@ -11,7 +11,10 @@ import (
 	"github.com/firebase007/go-rest-api-with-fiber/database"
 )
 
-// GetAllProducts from db
+// @ GET /api
+// @host localhost:3000
+// @desc Get all products
+// @version 1
 func GetAllProducts(c *fiber.Ctx) error {
 
 	// query product table in the database
