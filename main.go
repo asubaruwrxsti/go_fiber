@@ -1,36 +1,32 @@
-
-package main 
+package main
 
 import (
-"github.com/gofiber/fiber" // import the fiber package
+	"github.com/gofiber/fiber" // import the fiber package
 
-"log"
+	"log"
 
-"github.com/firebase007/go-rest-api-with-fiber/database"
+	"github.com/firebase007/go-rest-api-with-fiber/database"
 
-"github.com/firebase007/go-rest-api-with-fiber/router"
+	"github.com/firebase007/go-rest-api-with-fiber/router"
 
-"github.com/gofiber/fiber/middleware"
+	"github.com/gofiber/fiber/middleware"
 
-
-_ "github.com/lib/pq"
-
+	_ "github.com/lib/pq"
 )
-
 
 func main() { // entry point to our program
 
 	// Connect to database
-if err := database.Connect(); err != nil {
-	log.Fatal(err)
-}
+	if err := database.Connect(); err != nil {
+		log.Fatal(err)
+	}
 
-app := fiber.New()  // call the New() method - used to instantiate a new Fiber App
+	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
 
-app.Use(middleware.Logger())
+	app.Use(middleware.Logger())
 
-router.SetupRoutes(app)
+	router.SetupRoutes(app)
 
-app.Listen(3000) // listen/Serve the new Fiber app on port 3000
+	app.Listen(3000) // listen/Serve the new Fiber app on port 3000
 
 }

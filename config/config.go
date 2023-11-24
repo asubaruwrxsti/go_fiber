@@ -9,7 +9,7 @@ import (
 )
 
 // Config func to get env value from key ---
-func Config(key string) string{
+func Config(key string) string {
 
 	// load .env file
 	err := godotenv.Load(".env")
@@ -17,13 +17,7 @@ func Config(key string) string{
 	if err != nil {
 		fmt.Print("Error loading .env file")
 	}
-  
+	defer fmt.Print("Successfully loaded .env file\n")
 	return os.Getenv(key)
-	
+
 }
-
-
-
-
-
-

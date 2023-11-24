@@ -1,6 +1,5 @@
 package database
 
-
 // CreateProductTable ...
 func CreateProductTable() {
 
