@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2" // import the fiber package
 
 	"log"
@@ -13,6 +14,7 @@ import (
 	_ "github.com/firebase007/go-rest-api-with-fiber/docs"
 
 	"github.com/gofiber/swagger"
+	"go.uber.org/zap"
 )
 
 // @title Go Fiber REST API with Swagger Example
@@ -28,6 +30,7 @@ func main() {
 	}
 
 	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
+	logger, _ := zap.NewProduction()
 
 	// app.Use(middleware.Logger())
 	router.SetupRoutes(app)
@@ -38,6 +41,10 @@ func main() {
 		DeepLinking: false,
 	}))
 
-	app.Listen(":3000")
+	app.Use(fiberzap.New(fiberzap.Config{
+		Logger: logger,
+	}))
+
+	log.Fatal(app.Listen(":3000"))
 
 }
