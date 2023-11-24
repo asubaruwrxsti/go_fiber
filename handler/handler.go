@@ -22,7 +22,7 @@ import (
 func GetAllProducts(c *fiber.Ctx) error {
 
 	// query product table in the database
-	rows, err := database.DB.Query("SELECT name, description, category, amount FROM products order by name")
+	rows, err := database.DB.Find(&model.Product{}).Rows()
 	if err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -81,7 +81,7 @@ func GetSingleProduct(c *fiber.Ctx) error {
 	product := model.Product{}
 
 	// query product database
-	row, err := database.DB.Query("SELECT * FROM products WHERE id = $1", id)
+	row, err := database.DB.Take(&product, id).Rows()
 	if err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -156,7 +156,7 @@ func CreateProduct(c *fiber.Ctx) error {
 	}
 
 	// Insert Product into database
-	res, err := database.DB.Query("INSERT INTO products (name, description, category, amount) VALUES ($1, $2, $3, $4)", p.Name, p.Description, p.Category, p.Amount)
+	res, err := database.DB.Create(&p).Rows()
 	if err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -196,7 +196,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	// query product table in database
-	res, err := database.DB.Query("DELETE FROM products WHERE id = $1", id)
+	res, err := database.DB.Delete(&model.Product{}, id).Rows()
 	if err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,

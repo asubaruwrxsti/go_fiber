@@ -1,9 +1,13 @@
 package database
 
 // CreateProductTable ...
-func CreateProductTable() {
+func CreateProductTable() error {
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return err
+	}
 
-	DB.Query(`CREATE TABLE IF NOT EXISTS products (
+	sqlDB.Query(`CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     amount integer,
     name text UNIQUE,
@@ -11,5 +15,6 @@ func CreateProductTable() {
     category text NOT NULL
 )
 `)
+	return nil
 
 }
