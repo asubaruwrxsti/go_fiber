@@ -25,6 +25,7 @@ require (
 	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
+	github.com/gofiber/contrib/fiberzap v1.0.2 // indirect
 	github.com/gofiber/contrib/fiberzap/v2 v2.1.1 // indirect
 	github.com/gofiber/fiber/v2 v2.51.0 // indirect
 	github.com/gofiber/swagger v0.1.14 // indirect
@@ -33,6 +34,8 @@ require (
 	github.com/google/gofuzz v1.0.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/klauspost/compress v1.17.3 // indirect
@@ -44,6 +47,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/mattn/go-sqlite3 v1.14.18 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
@@ -77,5 +81,8 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/mysql v1.5.2 // indirect
+	gorm.io/driver/sqlite v1.5.4 // indirect
+	gorm.io/gorm v1.25.5 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
