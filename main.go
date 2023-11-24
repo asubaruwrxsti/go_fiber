@@ -6,35 +6,44 @@ import (
 	"log"
 
 	"github.com/firebase007/go-rest-api-with-fiber/database"
-
-	"github.com/firebase007/go-rest-api-with-fiber/router"
+	"github.com/firebase007/go-rest-api-with-fiber/handler"
+	"github.com/firebase007/go-rest-api-with-fiber/middleware"
 
 	_ "github.com/lib/pq"
 
-	_ "go-rest-api-with-fiber/docs"
+	_ "github.com/firebase007/go-rest-api-with-fiber/docs"
 
 	"github.com/gofiber/swagger"
 )
 
-func main() { // entry point to our program
+// @title Go Fiber REST API with Swagger Example
+// @description Go Fiber REST API with Swagger Example
+// @version 1
+// @host localhost:3000
+// @BasePath /
+// @schemes http
+func main() {
 
-	// Connect to database
 	if err := database.Connect(); err != nil {
 		log.Fatal(err)
 	}
+	// app.Use(middleware.Logger())
+	// router.SetupRoutes(app)
 
 	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
+	api := app.Group("/api", middleware.AuthReq())
 
-	// app.Use(middleware.Logger()) // use the Logger middleware
+	api.Get("/", handler.GetAllProducts)
+	api.Get("/:id", handler.GetSingleProduct)
+	api.Post("/", handler.CreateProduct)
+	api.Delete("/:id", handler.DeleteProduct)
 
-	router.SetupRoutes(app)
-	// setup swagger
 	app.Get("/swagger/*", swagger.HandlerDefault)     // default
 	app.Get("/swagger/*", swagger.New(swagger.Config{ // custom
-		URL:         "http://http://localhost:3000/doc.json",
+		URL:         "http://localhost:3000/swagger/doc.json",
 		DeepLinking: false,
 	}))
 
-	app.Listen(":3000") // listen/Serve the new Fiber app on port 3000
+	app.Listen(":3000")
 
 }

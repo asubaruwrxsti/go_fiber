@@ -1,4 +1,11 @@
+basePath: /
+host: localhost:3000
 info:
   contact: {}
+  description: Go Fiber REST API with Swagger Example
+  title: Go Fiber REST API with Swagger Example
+  version: "1"
 paths: {}
+schemes:
+- http
 swagger: "2.0"
