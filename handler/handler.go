@@ -20,7 +20,10 @@ import (
 // @Success 200 {object} map[string]interface{}
 // @Router / [get]
 func Home(c *fiber.Ctx) error {
-	return c.SendString("Hello, World 👋!")
+	return c.Render("home", fiber.Map{
+		"Title":   "Hello, World!",
+		"Message": "Hello, World!",
+	})
 }
 
 // GetAllProducts godoc

@@ -29,7 +29,9 @@ require (
 	github.com/gofiber/contrib/fiberzap/v2 v2.1.1 // indirect
 	github.com/gofiber/fiber/v2 v2.51.0 // indirect
 	github.com/gofiber/swagger v0.1.14 // indirect
-	github.com/gofiber/utils v0.0.6 // indirect
+	github.com/gofiber/template v1.8.2 // indirect
+	github.com/gofiber/template/html/v2 v2.0.5 // indirect
+	github.com/gofiber/utils v1.1.0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.0.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect

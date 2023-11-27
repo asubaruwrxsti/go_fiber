@@ -6,6 +6,22 @@ info:
   title: Go Fiber REST API with Swagger Example
   version: "1"
 paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: Hello World.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Hello World.
+      tags:
+      - home
   /api:
     get:
       consumes:

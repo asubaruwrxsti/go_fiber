@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2" // import the fiber package
+	"github.com/gofiber/template/html/v2"
 
 	"log"
 
@@ -29,7 +30,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app := fiber.New() // call the New() method - used to instantiate a new Fiber App
+	engine := html.New("./views", ".html")
+	app := fiber.New(
+		fiber.Config{
+			Views: engine,
+		},
+	)
+
 	logger, _ := zap.NewProduction()
 
 	// app.Use(middleware.Logger())
