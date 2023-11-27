@@ -10,7 +10,6 @@ import (
 
 // SetupRoutes func
 func SetupRoutes(app *fiber.App) {
-
 	// Middleware
 	api := app.Group("/api", middleware.AuthReq())
 
@@ -18,5 +17,8 @@ func SetupRoutes(app *fiber.App) {
 	api.Get("/:id", handler.GetSingleProduct)
 	api.Post("/", handler.CreateProduct)
 	api.Delete("/:id", handler.DeleteProduct)
-	api.Get("/health", handler.HealthCheck)
+
+	// Health check
+	debug := app.Group("/debug")
+	debug.Get("/ping", handler.Ping)
 }

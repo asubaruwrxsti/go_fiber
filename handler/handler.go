@@ -230,7 +230,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /api/health [get]
-func HealthCheck(c *fiber.Ctx) error {
+func Ping(c *fiber.Ctx) error {
 	res := map[string]interface{}{
 		"data": "Server is up and running",
 	}
