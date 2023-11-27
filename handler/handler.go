@@ -9,7 +9,51 @@ import (
 	"github.com/firebase007/go-rest-api-with-fiber/model"
 
 	"github.com/firebase007/go-rest-api-with-fiber/database"
+	"github.com/go-playground/validator/v10"
 )
+
+type (
+	ErrorResponse struct {
+		Error       bool
+		FailedField string
+		Tag         string
+		Value       interface{}
+	}
+
+	XValidator struct {
+		validator *validator.Validate
+	}
+
+	GlobalErrorHandlerResp struct {
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	}
+)
+
+// This is the validator instance
+// for more information see: https://github.com/go-playground/validator
+var validate = validator.New()
+
+func (v XValidator) Validate(data interface{}) []ErrorResponse {
+	validationErrors := []ErrorResponse{}
+
+	errs := validate.Struct(data)
+	if errs != nil {
+		for _, err := range errs.(validator.ValidationErrors) {
+			// In this case data object is actually holding the User struct
+			var elem ErrorResponse
+
+			elem.FailedField = err.Field() // Export struct field name
+			elem.Tag = err.Tag()           // Export struct tag
+			elem.Value = err.Value()       // Export field value
+			elem.Error = true
+
+			validationErrors = append(validationErrors, elem)
+		}
+	}
+
+	return validationErrors
+}
 
 // Home godoc
 // @Summary Hello World.
@@ -156,6 +200,13 @@ func GetSingleProduct(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{}
 // @Router /api [post]
 func CreateProduct(c *fiber.Ctx) error {
+	errorValidation := XValidator{validator: validate}
+	errorValidation.validator.RegisterValidation(
+		"required",
+		func(fl validator.FieldLevel) bool {
+			return false
+		},
+	)
 
 	// Instantiate new Product struct
 	p := new(model.Product)
@@ -171,28 +222,35 @@ func CreateProduct(c *fiber.Ctx) error {
 	}
 
 	// Insert Product into database
-	res, err := database.DB.Create(&p).Rows()
-	if err != nil {
-		c.Status(500).JSON(&fiber.Map{
+	if errs := errorValidation.Validate(p); len(errs) > 0 {
+		c.Status(400).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": errs,
 		})
-		return err
-	}
-	// Print result
-	log.Println(res)
+		return nil
+	} else {
+		res, err := database.DB.Create(&p).Rows()
+		if err != nil {
+			c.Status(500).JSON(&fiber.Map{
+				"success": false,
+				"message": err,
+			})
+			return err
+		}
+		log.Println(res)
 
-	// Return Product in JSON format
-	if err := c.JSON(&fiber.Map{
-		"success": true,
-		"message": "Product successfully created",
-		"product": p,
-	}); err != nil {
-		c.Status(500).JSON(&fiber.Map{
-			"success": false,
-			"message": "Error creating product",
-		})
-		return err
+		// Return Product in JSON format
+		if err := c.JSON(&fiber.Map{
+			"success": true,
+			"message": "Product successfully created",
+			"product": p,
+		}); err != nil {
+			c.Status(500).JSON(&fiber.Map{
+				"success": false,
+				"message": "Error creating product",
+			})
+			return err
+		}
 	}
 	return nil
 }
