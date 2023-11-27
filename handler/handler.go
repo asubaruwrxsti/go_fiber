@@ -11,6 +11,18 @@ import (
 	"github.com/firebase007/go-rest-api-with-fiber/database"
 )
 
+// Home godoc
+// @Summary Hello World.
+// @Description Hello World.
+// @Tags home
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router / [get]
+func Home(c *fiber.Ctx) error {
+	return c.SendString("Hello, World 👋!")
+}
+
 // GetAllProducts godoc
 // @Summary Get all products
 // @Description Get all products

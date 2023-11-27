@@ -10,6 +10,9 @@ import (
 
 // SetupRoutes func
 func SetupRoutes(app *fiber.App) {
+	// Public routes
+	app.Get("/", handler.Home)
+
 	// Middleware
 	api := app.Group("/api", middleware.AuthReq())
 
@@ -18,7 +21,7 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/", handler.CreateProduct)
 	api.Delete("/:id", handler.DeleteProduct)
 
-	// Health check
+	// Debug routes
 	debug := app.Group("/debug")
 	debug.Get("/ping", handler.Ping)
 }
