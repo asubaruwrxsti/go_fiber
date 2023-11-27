@@ -1,1 +1,8 @@
-# go-rest-api-with-fiber
+# go-rest-api
+
+* Go
+* Fiber
+* GORM
+* MySQL
+* Zap
+* Swagger
