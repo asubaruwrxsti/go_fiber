@@ -204,12 +204,6 @@ func GetSingleProduct(c *fiber.Ctx) error {
 func CreateProduct(c *fiber.Ctx) error {
 	// TODO: Add validation
 	errorValidation := XValidator{validator: validate}
-	errorValidation.validator.RegisterValidation(
-		"required",
-		func(fl validator.FieldLevel) bool {
-			return false
-		},
-	)
 
 	// Instantiate new Product struct
 	p := new(model.Product)
