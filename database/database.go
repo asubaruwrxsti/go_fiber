@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/firebase007/go-rest-api-with-fiber/config"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -16,15 +16,17 @@ var DB *gorm.DB
 func Connect() error {
 	var err error
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
+		config.Config("DB_HOST"),
 		config.Config("DB_USER"),
 		config.Config("DB_PASSWORD"),
-		"127.0.0.1",
-		"3306",
-		"auth",
+		config.Config("DB_NAME"),
+		config.Config("DB_PORT"),
+		config.Config("DB_TIMEZONE"),
 	)
 
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		return err
@@ -39,6 +41,7 @@ func Connect() error {
 		return errors.New("ping database error")
 	}
 
+	CreateDatabase()
 	CreateProductTable()
 	return nil
 }

@@ -2,19 +2,40 @@ package database
 
 // CreateProductTable ...
 func CreateProductTable() error {
-	sqlDB, err := DB.DB()
+	dbObject, err := DB.DB()
 	if err != nil {
 		return err
 	}
 
-	sqlDB.Query(`CREATE TABLE IF NOT EXISTS products (
-    id SERIAL PRIMARY KEY,
-    amount integer,
-    name text UNIQUE,
-    description text,
-    category text NOT NULL
-)
-`)
+	dbObject.Query(`
+		CREATE TABLE IF NOT EXISTS products (
+			id SERIAL PRIMARY KEY,
+			amount INTEGER,
+			name TEXT UNIQUE,
+			description TEXT,
+			category TEXT NOT NULL
+		);`,
+	)
 	return nil
+}
 
+func CreateDatabase() error {
+	dbObject, err := DB.DB()
+	if err != nil {
+		return err
+	}
+
+	dbObject.Query(`
+	CREATE USER gorm WITH ENCRYPTED PASSWORD 'gorm';
+	GRANT ALL PRIVILEGES ON DATABASE gorm TO gorm;
+	`,
+	)
+
+	dbObject.Query(`
+		CREATE DATABASE IF NOT EXISTS products;
+		GRANT ALL PRIVILEGES ON DATABASE gorm TO gorm;
+		`,
+	)
+
+	return nil
 }
