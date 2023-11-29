@@ -3,11 +3,12 @@ services:
   app:
     container_name: fiber
     build: .
+    restart: always
     ports:
       - "3000:3000"
     depends_on:
-      - db
-  
+      db:
+        condition: service_healthy
   db:
     container_name: roach
     image: cockroachdb/cockroach
@@ -16,13 +17,13 @@ services:
       - "26257:26257"
       - "8080:8080"
     restart: always
-    environment:
-      - COCKROACH_DATABASE=products
-      - COCKROACH_USER=gorm
-      - COCKROACH_PASSWORD=gorm
-      - COCKROACH_INSECURE=true
     volumes:
       - "roach-single:/cockroach/cockroach-data"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/#/overview/list"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
 volumes:
   roach-single:

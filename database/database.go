@@ -14,10 +14,8 @@ var DB *gorm.DB
 func Connect() error {
 	var err error
 
-	dsn := "postgresql://root@127.0.0.1:26257/defaultdb?sslmode=disable"
-
+	dsn := "postgresql://root@db:26257/defaultdb?sslmode=disable"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
 	if err != nil {
 		return err
 	}
