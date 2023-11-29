@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -96,7 +97,7 @@ func GetAllProducts(c *fiber.Ctx) error {
 
 	for rows.Next() {
 		product := model.Product{}
-		err := rows.Scan(&product.Name, &product.Description, &product.Category, &product.Amount)
+		err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.Category, &product.Amount)
 		// Exit if we get an error
 		if err != nil {
 			c.Status(500).JSON(&fiber.Map{
@@ -108,6 +109,7 @@ func GetAllProducts(c *fiber.Ctx) error {
 
 		// Append Product to Products
 		result.Products = append(result.Products, product)
+		fmt.Println(product)
 	}
 
 	// Return Products in JSON format
@@ -200,6 +202,7 @@ func GetSingleProduct(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{}
 // @Router /api [post]
 func CreateProduct(c *fiber.Ctx) error {
+	// TODO: Add validation
 	errorValidation := XValidator{validator: validate}
 	errorValidation.validator.RegisterValidation(
 		"required",

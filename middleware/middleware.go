@@ -17,3 +17,5 @@ func AuthReq() func(*fiber.Ctx) error {
 
 	return basicauth.New(cfg)
 }
+
+// TODO: Add JWT middleware
