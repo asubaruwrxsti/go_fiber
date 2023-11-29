@@ -2,9 +2,7 @@ package database
 
 import (
 	"errors"
-	"fmt"
 
-	"github.com/firebase007/go-rest-api-with-fiber/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,15 +14,17 @@ var DB *gorm.DB
 func Connect() error {
 	var err error
 
-	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
-		config.Config("DB_HOST"),
-		config.Config("DB_USER"),
-		config.Config("DB_PASSWORD"),
-		config.Config("DB_NAME"),
-		config.Config("DB_PORT"),
-		config.Config("DB_TIMEZONE"),
-	)
+	//dsn := "postgresql://user:password@db:26257/database?sslmode=disable"
+
+	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+	// 	config.Config("DB_HOST"),
+	// 	config.Config("DB_USER"),
+	// 	config.Config("DB_PASSWORD"),
+	// 	config.Config("DB_NAME"),
+	// 	config.Config("DB_PORT"),
+	// )
+
+	dsn := "postgresql://gorm:gorm@roach:26257/products?sslmode=disable"
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -32,12 +32,12 @@ func Connect() error {
 		return err
 	}
 
-	sqlDB, err := DB.DB()
+	dbObject, err := DB.DB()
 	if err != nil {
 		return err
 	}
 
-	if err = sqlDB.Ping(); err != nil {
+	if err = dbObject.Ping(); err != nil {
 		return errors.New("ping database error")
 	}
 
