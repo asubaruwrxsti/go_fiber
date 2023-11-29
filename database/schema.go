@@ -26,14 +26,7 @@ func CreateDatabase() error {
 	}
 
 	dbObject.Query(`
-	CREATE USER gorm WITH PASSWORD 'gorm';
-	GRANT ALL PRIVILEGES ON DATABASE gorm TO gorm;
-	`,
-	)
-
-	dbObject.Query(`
 		CREATE DATABASE IF NOT EXISTS products;
-		GRANT ALL PRIVILEGES ON DATABASE gorm TO gorm;
 		`,
 	)
 
