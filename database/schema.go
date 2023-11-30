@@ -13,7 +13,7 @@ func CreateProductTable() error {
 			amount INTEGER,
 			name TEXT UNIQUE,
 			description TEXT,
-			category TEXT NOT NULL
+			category TEXT
 		);`,
 	)
 	return nil

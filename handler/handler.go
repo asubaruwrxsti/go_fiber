@@ -82,7 +82,7 @@ func Home(c *fiber.Ctx) error {
 func GetAllProducts(c *fiber.Ctx) error {
 
 	// query product table in the database
-	rows, err := database.DB.Find(&model.Product{}).Rows()
+	rows, err := database.DB.Model(&model.Product{}).Rows()
 	if err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -111,6 +111,7 @@ func GetAllProducts(c *fiber.Ctx) error {
 		result.Products = append(result.Products, product)
 		fmt.Println(product)
 	}
+	log.Println(result)
 
 	// Return Products in JSON format
 	if err := c.JSON(&fiber.Map{
@@ -290,6 +291,68 @@ func DeleteProduct(c *fiber.Ctx) error {
 		return err
 	}
 	return nil
+}
+
+// UpdateProduct godoc
+// @Summary Update a product
+// @Description Update a product
+// @Tags products
+// @Accept */*
+// @Produce json
+// @Param id path int true "Product ID"
+// @Param name body string true "Product Name"
+// @Param description body string true "Product Description"
+// @Param category body string true "Product Category"
+// @Param amount body int true "Product Amount"
+// @Success 200 {object} map[string]interface{}
+// @Router /api/{id} [put]
+func UpdateProduct(c *fiber.Ctx) error {
+	// Extract product ID from the URL parameters
+	id := c.Params("id")
+
+	// Instantiate new Product struct
+	updatedProduct := new(model.Product)
+
+	// Parse request body into updated product struct
+	if err := c.BodyParser(updatedProduct); err != nil {
+		log.Println(err)
+		return c.Status(400).JSON(&fiber.Map{
+			"success": false,
+			"message": "Invalid request body",
+		})
+	}
+
+	// Fetch existing product from the database
+	existingProduct := new(model.Product)
+	if err := database.DB.First(existingProduct, id).Error; err != nil {
+		log.Println(err)
+		return c.Status(404).JSON(&fiber.Map{
+			"success": false,
+			"message": "Product not found",
+		})
+	}
+
+	// Update fields of the existing product with the new values
+	existingProduct.Name = updatedProduct.Name
+	existingProduct.Description = updatedProduct.Description
+	existingProduct.Category = updatedProduct.Category
+	existingProduct.Amount = updatedProduct.Amount
+
+	// Save the updated product back to the database
+	if err := database.DB.Save(existingProduct).Error; err != nil {
+		log.Println(err)
+		return c.Status(500).JSON(&fiber.Map{
+			"success": false,
+			"message": "Error updating product",
+		})
+	}
+
+	// Return the updated product in JSON format
+	return c.JSON(&fiber.Map{
+		"success": true,
+		"message": "Product successfully updated",
+		"product": existingProduct,
+	})
 }
 
 // HealthCheck godoc
