@@ -14,6 +14,7 @@ var DB *gorm.DB
 func Connect() error {
 	var err error
 
+	// TODO: use the config package to get the database credentials
 	dsn := "postgresql://root@db:26257/defaultdb?sslmode=disable"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
