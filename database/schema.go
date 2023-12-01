@@ -8,6 +8,11 @@ func CreateProductTable() error {
 	}
 
 	dbObject.Query(`
+		use test;
+		`,
+	)
+
+	dbObject.Query(`
 		CREATE TABLE IF NOT EXISTS products (
 			id SERIAL PRIMARY KEY,
 			name TEXT UNIQUE,
@@ -26,7 +31,7 @@ func CreateDatabase() error {
 	}
 
 	dbObject.Query(`
-		CREATE DATABASE IF NOT EXISTS products;
+		CREATE DATABASE IF NOT EXISTS test;
 		`,
 	)
 

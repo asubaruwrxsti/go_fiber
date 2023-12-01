@@ -30,7 +30,7 @@ func Connect() error {
 	)
 
 	// TODO: use the config package to get the database credentials
-	dsn := "postgresql://root@db:26257/defaultdb?sslmode=disable"
+	dsn := "postgresql://root@db:26257/test?sslmode=disable"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
