@@ -2,10 +2,12 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/firebase007/go-rest-api-with-fiber/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -30,7 +32,13 @@ func Connect() error {
 	)
 
 	// TODO: use the config package to get the database credentials
-	dsn := "postgresql://root@db:26257/test?sslmode=disable"
+	// dsn := "postgresql://root@db:26257/test?sslmode=disable"
+	dsn := fmt.Sprintf("postgresql://%s@%s:%s/%s?sslmode=disable",
+		config.Config("DB_USER"),
+		config.Config("DB_HOST"),
+		config.Config("DB_PORT"),
+		config.Config("DB_NAME"),
+	)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
