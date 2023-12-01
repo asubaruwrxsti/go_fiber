@@ -117,7 +117,7 @@ func GetAllProducts(c *fiber.Ctx) error {
 	if err := c.JSON(&fiber.Map{
 		"success": true,
 		"product": result,
-		"message": "All product returned successfully",
+		"message": "All products returned successfully",
 	}); err != nil {
 		c.Status(500).JSON(&fiber.Map{
 			"success": false,
@@ -227,7 +227,7 @@ func CreateProduct(c *fiber.Ctx) error {
 		})
 		return nil
 	} else {
-		res, err := database.DB.Create(&p).Rows()
+		_, err := database.DB.Create(&p).Rows()
 		if err != nil {
 			c.Status(500).JSON(&fiber.Map{
 				"success": false,
@@ -235,7 +235,6 @@ func CreateProduct(c *fiber.Ctx) error {
 			})
 			return err
 		}
-		log.Println(res)
 
 		// Return Product in JSON format
 		if err := c.JSON(&fiber.Map{

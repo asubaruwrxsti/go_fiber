@@ -10,10 +10,10 @@ func CreateProductTable() error {
 	dbObject.Query(`
 		CREATE TABLE IF NOT EXISTS products (
 			id SERIAL PRIMARY KEY,
-			amount INTEGER,
 			name TEXT UNIQUE,
 			description TEXT,
-			category TEXT
+			category TEXT,
+			amount INTEGER
 		);`,
 	)
 	return nil
