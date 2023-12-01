@@ -1,7 +1,6 @@
 package router
 
 import (
-	"github.com/firebase007/go-rest-api-with-fiber/config"
 	"github.com/firebase007/go-rest-api-with-fiber/handler"
 	"github.com/firebase007/go-rest-api-with-fiber/middleware"
 
@@ -12,10 +11,10 @@ import (
 func SetupRoutes(app *fiber.App) {
 	// Public routes
 	app.Get("/", handler.Home)
+	app.Get("/auth", middleware.Auth())
 
 	// Middleware
-	// api := app.Group("/api", middleware.AuthReq())
-	api := app.Group("/api", middleware.JWTAuth(config.Config("JWT_SECRET")))
+	api := app.Group("/api", middleware.AuthReq())
 
 	api.Get("/", handler.GetAllProducts)
 	api.Get("/:id", handler.GetSingleProduct)
