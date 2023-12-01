@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// AuthReq middleware
+// Auth
 func Auth() func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		username := config.Config("AUTH_USERNAME")
