@@ -12,6 +12,7 @@ func SetupRoutes(app *fiber.App) {
 	// Public routes
 	app.Get("/", handler.Home)
 	app.Get("/auth", middleware.Auth())
+	app.Get("/health", handler.HealthCheck)
 
 	// Middleware
 	api := app.Group("/api", middleware.AuthReq())
@@ -21,8 +22,4 @@ func SetupRoutes(app *fiber.App) {
 	api.Post("/", handler.CreateProduct)
 	api.Post("/:id", handler.UpdateProduct)
 	api.Delete("/:id", handler.DeleteProduct)
-
-	// Debug routes
-	debug := app.Group("/debug")
-	debug.Get("/ping", handler.Ping)
 }

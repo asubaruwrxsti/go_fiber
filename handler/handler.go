@@ -286,8 +286,8 @@ func UpdateProduct(c *fiber.Ctx) error {
 // @Accept */*
 // @Produce json
 // @Success 200 {object} map[string]interface{}
-// @Router /api/health [get]
-func Ping(c *fiber.Ctx) error {
+// @Router /health [get]
+func HealthCheck(c *fiber.Ctx) error {
 	res := map[string]interface{}{
 		"data": "Server is up and running",
 	}

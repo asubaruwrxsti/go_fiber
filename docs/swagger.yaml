@@ -25,19 +25,14 @@ paths:
   /api:
     get:
       consumes:
-      - '*/*'
-      description: Get all products
+      - application/json
+      description: AuthReq middleware
       produces:
       - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get all products
+      responses: {}
+      summary: AuthReq middleware
       tags:
-      - products
+      - middleware
     post:
       consumes:
       - '*/*'
@@ -121,7 +116,63 @@ paths:
       summary: Get a product
       tags:
       - products
-  /api/health:
+    put:
+      consumes:
+      - '*/*'
+      description: Update a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Product Description
+        in: body
+        name: description
+        required: true
+        schema:
+          type: string
+      - description: Product Category
+        in: body
+        name: category
+        required: true
+        schema:
+          type: string
+      - description: Product Amount
+        in: body
+        name: amount
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a product
+      tags:
+      - products
+  /auth:
+    get:
+      consumes:
+      - application/json
+      description: Auth middleware
+      produces:
+      - application/json
+      responses: {}
+      summary: Auth middleware
+      tags:
+      - middleware
+  /health:
     get:
       consumes:
       - '*/*'
