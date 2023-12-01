@@ -39,6 +39,7 @@ func Connect() error {
 		config.Config("DB_PORT"),
 		config.Config("DB_NAME"),
 	)
+	log.Print(">> dsn: ", dsn)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
