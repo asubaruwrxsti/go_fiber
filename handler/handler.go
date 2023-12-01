@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -80,52 +78,21 @@ func Home(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{}
 // @Router /api [get]
 func GetAllProducts(c *fiber.Ctx) error {
-
-	// query product table in the database
-	rows, err := database.DB.Model(&model.Product{}).Rows()
-	if err != nil {
-		c.Status(500).JSON(&fiber.Map{
-			"success": false,
-			"error":   err,
-		})
-		return err
-	}
-
-	defer rows.Close()
-
-	result := model.Products{}
-
-	for rows.Next() {
-		product := model.Product{}
-		err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.Category, &product.Amount)
-		// Exit if we get an error
-		if err != nil {
-			c.Status(500).JSON(&fiber.Map{
-				"success": false,
-				"error":   err,
-			})
-			return err
-		}
-
-		// Append Product to Products
-		result.Products = append(result.Products, product)
-		fmt.Println(product)
-	}
-	log.Println(result)
-
-	// Return Products in JSON format
-	if err := c.JSON(&fiber.Map{
-		"success": true,
-		"product": result,
-		"message": "All products returned successfully",
-	}); err != nil {
-		c.Status(500).JSON(&fiber.Map{
+	// Query all products from the database
+	var result model.Products
+	if err := database.DB.Find(&result.Products).Error; err != nil {
+		return c.Status(500).JSON(&fiber.Map{
 			"success": false,
 			"message": err,
 		})
-		return err
 	}
-	return nil
+
+	// Return Products in JSON format
+	return c.JSON(&fiber.Map{
+		"success": true,
+		"product": result,
+		"message": "All products returned successfully",
+	})
 }
 
 // GetSingleProduct godoc
@@ -138,56 +105,23 @@ func GetAllProducts(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{}
 // @Router /api/{id} [get]
 func GetSingleProduct(c *fiber.Ctx) error {
-
 	id := c.Params("id")
 	product := model.Product{}
 
-	// query product database
-	row, err := database.DB.Take(&product, id).Rows()
-	if err != nil {
-		c.Status(500).JSON(&fiber.Map{
+	// Query single product from the database
+	if err := database.DB.First(&product, id).Error; err != nil {
+		return c.Status(404).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": "Product not found",
 		})
-		return err
 	}
 
-	defer row.Close()
-
-	// iterate through the values of the row
-	for row.Next() {
-		switch err := row.Scan(&id, &product.Amount, &product.Name, &product.Description, &product.Category); err {
-		case sql.ErrNoRows:
-			log.Println("No rows were returned!")
-			c.Status(500).JSON(&fiber.Map{
-				"success": false,
-				"message": err,
-			})
-		case nil:
-			log.Println(product.Name, product.Description, product.Category, product.Amount)
-		default:
-			//   panic(err)
-			c.Status(500).JSON(&fiber.Map{
-				"success": false,
-				"message": err,
-			})
-		}
-
-	}
-
-	// return product in JSON format
-	if err := c.JSON(&fiber.Map{
-		"success": false,
+	// Return product in JSON format
+	return c.JSON(&fiber.Map{
+		"success": true,
 		"message": "Successfully fetched product",
 		"product": product,
-	}); err != nil {
-		c.Status(500).JSON(&fiber.Map{
-			"success": false,
-			"message": err,
-		})
-		return err
-	}
-	return nil
+	})
 }
 
 // CreateProduct godoc
@@ -209,47 +143,38 @@ func CreateProduct(c *fiber.Ctx) error {
 	// Instantiate new Product struct
 	p := new(model.Product)
 
-	//  Parse body into product struct
+	// Parse body into product struct
 	if err := c.BodyParser(p); err != nil {
 		log.Println(err)
-		c.Status(400).JSON(&fiber.Map{
+		return c.Status(400).JSON(&fiber.Map{
 			"success": false,
-			"message": err,
+			"message": "Invalid request body",
 		})
-		return err
+	}
+
+	// Validate the product
+	if errs := errorValidation.Validate(p); len(errs) > 0 {
+		return c.Status(400).JSON(&fiber.Map{
+			"success": false,
+			"message": "Invalid request body",
+			"errors":  errs,
+		})
 	}
 
 	// Insert Product into database
-	if errs := errorValidation.Validate(p); len(errs) > 0 {
-		c.Status(400).JSON(&fiber.Map{
+	if err := database.DB.Create(p).Error; err != nil {
+		return c.Status(500).JSON(&fiber.Map{
 			"success": false,
-			"message": errs,
+			"message": "Error creating product",
 		})
-		return nil
-	} else {
-		_, err := database.DB.Create(&p).Rows()
-		if err != nil {
-			c.Status(500).JSON(&fiber.Map{
-				"success": false,
-				"message": err,
-			})
-			return err
-		}
-
-		// Return Product in JSON format
-		if err := c.JSON(&fiber.Map{
-			"success": true,
-			"message": "Product successfully created",
-			"product": p,
-		}); err != nil {
-			c.Status(500).JSON(&fiber.Map{
-				"success": false,
-				"message": "Error creating product",
-			})
-			return err
-		}
 	}
-	return nil
+
+	// Return Product in JSON format
+	return c.JSON(&fiber.Map{
+		"success": true,
+		"message": "Product successfully created",
+		"product": p,
+	})
 }
 
 // DeleteProduct godoc
